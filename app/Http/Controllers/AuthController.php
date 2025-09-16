@@ -2,36 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\LoginRequest;
 use App\Services\AuthService;
-use App\Helpers\ApiResponse;
-use Exception;
+use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
-    public function __construct(private readonly AuthService $authService) {}
-
-    public function login(LoginRequest $request)
+    public function __construct(private readonly AuthService $authService)
     {
-        try {
-            $result = $this->authService->login($request->email, $request->password);
+    }
 
-            return ApiResponse::success(
-                $result,
-                'Login successful'
-            );
-        } catch (Exception $e) {
-            return ApiResponse::fail($e->getMessage(), $e->getCode() ?: 500);
-        }
+    public function login(Request $request)
+    {
+            $validated = $request->validate([
+                'email'    => 'required|email',
+                'password' => 'required|string|min:6',
+            ]);
+
+            // Call service
+            $result = $this->authService->login($validated['email'], $validated['password']);
+            return $this->success($result, 'Login successful');
     }
 
     public function logout()
     {
-        try {
-            $this->authService->logout();
-            return ApiResponse::success([], 'Logged out successfully');
-        } catch (Exception $e) {
-            return ApiResponse::fail($e->getMessage(), $e->getCode() ?: 500);
-        }
+        $this->authService->logout();
+        return $this->success([], 'Logged out successfully');
     }
 }
