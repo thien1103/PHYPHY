@@ -2,32 +2,33 @@
 
 namespace App\Repositories;
 
+use App\Models\User;
 use Illuminate\Support\Collection;
 
 class UserRepository
 {
-    private array $users = [
-        [
-            "id" => 1,
-            "name" => "Demo User",
-            "email" => "demo@example.com",
-            "password" => '$2y$12$mhSPjIFMfh85N64L23lw9OGq3Kjqk7gTdXRwyvMfFWUsDwt4Ejtxq', // 123456
-        ],
-        [
-            "id" => 2,
-            "name" => "Another User",
-            "email" => "another@example.com",
-            "password" => '$2y$12$lmcZ2/8O5lqlham9Kc3ui.kq1pQDPKnhfXwdrwJD.tb2kgLuyj7FW', // 654321
-        ],
-    ];
-
-    public function findByEmail(string $email): ?array
+    /**
+     * Lấy danh sách staff
+     */
+    public function getStaffs(): Collection
     {
-        return collect($this->users)->firstWhere('email', $email);
+        // nếu muốn lọc role = staff thì thêm where
+        return User::select('id', 'name')->get();
     }
 
-    public function findById(int $id): ?array
+    /**
+     * Tìm user theo email
+     */
+    public function findByEmail(string $email): ?User
     {
-        return collect($this->users)->firstWhere('id', $id);
+        return User::where('email', $email)->first();
+    }
+
+    /**
+     * Tìm user theo id
+     */
+    public function findById(int $id): ?User
+    {
+        return User::find($id);
     }
 }

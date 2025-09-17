@@ -18,7 +18,7 @@ class AuthController extends Controller
                 'password' => 'required|string|min:6',
             ]);
 
-            // Call service
+              // Call service
             $result = $this->authService->login($validated['email'], $validated['password']);
             return $this->success($result, 'Login successful');
     }
