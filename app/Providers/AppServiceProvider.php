@@ -11,7 +11,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Bind TokenValidator interface to implementation
+        $this->app->bind(
+            \App\Contracts\TokenValidatorInterface::class,
+            \App\Services\TokenValidatorService::class
+        );
     }
 
     /**

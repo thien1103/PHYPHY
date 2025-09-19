@@ -9,20 +9,26 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\GroupClientController;
 
 
+// Public routes (no authentication required)
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout']);
 
-//Track bills
-Route::post('/track-bills', [TrackBillController::class, 'store']);
+// Protected routes (require JWT authentication)
+Route::middleware('jwt.auth')->group(function () {
+    // Auth routes
+    Route::post('/logout', [AuthController::class, 'logout']);
 
-// Warehouse
-Route::get('/warehouses', [WarehouseController::class, 'warehouses']);
-Route::get('/warehouse-management', [WarehouseController::class, 'warehouseManagement']);
+    // Track bills
+    Route::post('/track-bills', [TrackBillController::class, 'store']);
 
-// User
-Route::get('/staffs', [UserController::class, 'staffs']);
+    // Warehouse
+    Route::get('/warehouses', [WarehouseController::class, 'warehouses']);
+    Route::get('/warehouse-management', [WarehouseController::class, 'warehouseManagement']);
 
-// Group Client
-Route::get('/group-clients', [GroupClientController::class, 'index']);
+    // User
+    Route::get('/staffs', [UserController::class, 'staffs']);
+
+    // Group Client
+    Route::get('/group-clients', [GroupClientController::class, 'index']);
+});
 
 
